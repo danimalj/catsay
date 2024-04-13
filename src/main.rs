@@ -1,13 +1,13 @@
-
-
 use clap::Parser;
 use colored::Colorize;
 use anyhow::{Context, Result};
 
+
+//Setting up the command line arguments
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, help = "Message to display")]
+    #[arg(short, long, help = "Message to display:", default_value = "Meow")]
     message: String,
     #[arg(short, long, help = "Is Stormy alive or dead?", default_value = "false")]
     dead: bool,
@@ -16,10 +16,16 @@ struct Args {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>>{
+
+    //Parsing the command line arguments
     let args = Args::parse();
+
+    //Interpreting the variables from the command line arguments that were passed.
     let message = args.message;
     let eye = if args.dead { "x" } else { "o" };
     let d_or_a = if args.dead { "Stormy is dead" } else { "Stormy is alive" };
+
+    //Printing the message to the console
     let greeting = "Stormy says: ";
         if message.to_lowercase() == "woof" {
             let err: &str = "Cats don't say woof!";
@@ -28,6 +34,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
         println!("{} {}", greeting.blue().bold(), message.green());
         }
 
+    //If a catfile was provided, read the file and print the cat picture
+    //otherwise, print the default cat picture
     match &args.catfile {
         Some(path) => {
             let cat_template = std::fs::read_to_string(path)
@@ -50,5 +58,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
                 
             }
     }
+
+    //Return Ok if everything went well
     Ok(())
+    
 }
